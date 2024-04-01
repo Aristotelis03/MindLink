@@ -1,0 +1,21 @@
+.grid-container-friends{
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 20px;
+    font-size: 13px;
+    max-width:fit-content;
+    height: 60px;
+}
+.container {
+    padding: 30px;
+    background-color: #191919 !important;
+    border-radius: 15px;
+    color: #fff;
+    /* put it in an other div */
+    max-width: 100%; 
+    text-align: center;
+    
+}
+hr {
+    margin: 10px;
+}

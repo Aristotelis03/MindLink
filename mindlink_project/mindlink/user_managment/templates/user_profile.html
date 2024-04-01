@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block user_profile_style_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'user_profile/user_profile_style.css' %}">
+    <!-- Include additional CSS files specific to the main content here if needed -->
+{% endblock %}
+
+{% block title %}{{user_p.username }}{% endblock %}
+{% block content %}
+    <div class="user-profile">
+        <div class="user-info">
+            <div class="grid-container-follow"> 
+                <div class="item1">
+                    <img src="{{user_p.profile_image.url}}" alt="Image 1" width="150" height="150">
+        
+                </div>
+                <h1 class="item2">{{ user_p.username }}</h1>      
+                <span class="item3">Following</span>
+                <span class="item4">Followers</span>
+                <span class="item5"> {{user_p.following_relations.count}}</span>
+                <span class="item6"> {{user_p.followers.count}}</span>                  
+                <div class="item7">
+                    {% if request.user.is_authenticated and not request.user == user_p %}
+                        {% if request.user in user_p.followers.all %}
+                            <a href="{% url 'toggle_follow' user_id=user_p.id %}">Unfollow</a>
+                        {% else %}
+                            <a href="{% url 'toggle_follow' user_id=user_p.id %}">Follow</a>
+                        {% endif %}
+                    {% endif %}  
+
+                    {% if user_p == request.user %}
+                        <a class="nav-link" href="/logout"> Logout</a>
+                    {% endif %} 
+                </div>
+            </div>
+
+
+            
+
+            
+        </div>
+ 
+               
+    
+    </div>
+    {% include "posts_section.html" %} 
+{% endblock %}
+

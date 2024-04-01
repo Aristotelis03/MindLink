@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="{% static 'homepage/homepage_style.css' %}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <title>Homepage</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+                    {% block sidebar %}{% endblock %}
+                </div>
+
+                <!-- Main Content -->
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+                    Homepage
+                    {% if message %}
+                        <div>
+                            <a href="/logout">Logout</a>
+                        </div>
+                    {% endif %}
+                </main>
+            </div>
+        </div>
+    </body>
+</html>
+
+

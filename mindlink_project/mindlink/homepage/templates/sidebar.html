@@ -1,0 +1,97 @@
+{% load static %}
+{% block sidebar_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'homepage/sidebar_style.css' %}">
+    <!-- Include additional CSS files specific to the sidebar here if needed -->
+{% endblock %}
+
+{% block sidebar %}
+    <div class="navigation">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <form id="searchForm" action="/search/"  method="get">          
+                    <input id="search_input" class="form-control"  type="text" placeholder="Search" autocomplete="off">
+                </form>
+
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/home/">
+                    <i class="fa-regular fa-square fa-xl"></i>
+                    Home
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fa-regular fa-message fa-xl"></i>
+                    Messages
+                </a>
+            </li>
+
+            <li class="nav-item">
+                    <a class="nav-link" href="/favorites/">
+                        <i class="fa-regular fa-bookmark fa-xl"></i>
+                        Favorites
+                    </a>
+            </li>
+            
+            <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user_profile_view' request.user %}">
+                        <i class="fa-regular fa-user fa-xl"></i>
+                        {{ request.user }}
+                    </a>
+            </li>
+        </ul>
+
+
+    </div>
+    <script>
+        document.getElementById('search_input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent the default form submission
+                var inputValue = document.getElementById('search_input').value;
+                if (inputValue.trim() !== '') {
+                    var form = document.getElementById('searchForm');
+                    form.action = '/search/' + encodeURIComponent(inputValue);
+                    form.submit();
+                } else {
+                    alert('Please enter something before submitting.');
+                }
+            }
+        });
+    </script>
+    
+
+    <!-- <div class="create-post">
+        <a class="nav-link" href="/create_post">
+        Create Post
+        </a>
+    </div> -->
+<!-- 
+        <button id="openModalBtn">Open Modal</button>
+
+    <div id="myModal" class="modal centered">
+        <p>This is a modal!</p>
+        <button id="closeModalBtn">Close</button>
+    </div>
+
+    <div id="overlay" class="overlay"></div> -->
+
+
+    <!-- <script>
+        const openModalBtn = document.getElementById('create-post');
+        const closeModalBtn = document.getElementById('create-post');
+        const modal = document.getElementById('myModal');
+        const overlay = document.getElementById('overlay');
+
+        openModalBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+            overlay.style.display = 'block';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+    </script> -->
+{% endblock %}

@@ -1,0 +1,68 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 10px;
+    font-size: 13px; 
+}
+
+.grid-btn {
+    display: grid;
+    place-items: center;
+}
+
+/* Hide the default file input */
+.custom-file-input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+/* Style the label container */
+.upload-file {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    background-color: transparent;
+    color: white !important;
+    width: min-content;
+    border:  none;
+    margin: 10px;  /* Adjust margin as needed */
+}
+
+/* .textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+} */
+/* Adjust the styles as needed */
+.md-textarea {
+    width: 100%;
+    height:max-content !important; /* Adjust the initial height as needed */
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1.5px solid transparent;
+    border-radius: 5px;
+    resize: none;
+}
+.create-post-btn {
+    border: 1.4px solid white !important;
+}
+.create-post-btn:hover {
+    border: #04d9ff !important;
+    
+}
+
+.upload-file:hover {
+    color: #04d9ff !important;
+}
+
+input:hover {
+
+}
+
+
+

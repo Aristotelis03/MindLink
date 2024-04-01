@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block content_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'homepage/homepage_style.css' %}">
+    <!-- Include additional CSS files specific to the main content here if needed -->
+{% endblock %}
+
+
+{% block content %}
+    <!-- Content for the homepage goes here -->
+    
+    {% include "posts_section.html" %}
+{% endblock %}

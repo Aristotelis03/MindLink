@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'homepage/base_style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.png' %}" >
+    <title>MindLink - {% block title %}{% endblock %}</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <header>
+            <img class="logo" src="{% static 'images\Draft1Transparent.png' %}" width="120">
+
+        </header>
+        <div class="row g-2">
+            <!-- Sidebar -->
+            {% block sidebar_css %}
+                <link rel="stylesheet" type="text/css" href="{% static 'homepage/sidebar_style.css' %}">
+            {% endblock %}
+
+            <nav id="sidebar" class="col-md-3 col-lg-3 d-md-block bg-light sidebar">
+                {% block sidebar %}
+                    {% include "sidebar.html" %}
+                    <!-- <button class="create-post-btn" id="openModalBtn" class="btn btn-primary">Create Post</button> -->
+                    <div id="openModalBtn" class="create-post-btn">
+                        <span >Create Post</span>
+                    </div>
+
+            
+                {% endblock %}
+            </nav>
+
+            <!-- Modal content -->
+            <div id="myModal" class="modal centered">
+                <span class="closeModalBtn" id="closeModalBtn">&times;</span>
+                <div id="modalContent"></div>
+
+            </div>
+            
+           
+            <!-- Main Content -->
+            {% block content_css %}
+            <link rel="stylesheet" type="text/css" href="{% static 'homepage/homepage_style.css' %}">
+            {% endblock %}
+
+            {% block user_profile_style_css %}
+            <link rel="stylesheet" type="text/css" href="{% static 'user_profile/user_profile_style.css' %}">
+            {% endblock %}
+
+            {% block search_style %}
+            <link rel="stylesheet" type="text/css" href="{% static 'search/search_style.css' %}">
+            {% endblock %} 
+
+            <main id="main" role="main" class="col-md-4 col-lg-4 px-md-4 main-content">
+                {% block content %}{% endblock %}
+            </main>
+
+            {% block trending_hashtags_css %}
+                <link rel="stylesheet" type="text/css" href="{% static 'homepage/trending_hashtags_style.css' %}">
+            {% endblock %}
+
+            <div id="right-column-row1" class="col-md-3 col-lg-3 right-column">
+                {% block trending_hashtags %}
+                    {% include "trending_hashtags.html" %}
+                {% endblock %}
+            </div>
+
+            {% block display_friends_style %}
+                <link rel="stylesheet" type="text/css" href="{% static 'homepage/display_friends_style.css' %}">
+            {% endblock %}
+
+            <div id="right-column-row2" class="col-md-3 col-lg-3 right-column">
+                {% block content_display_friends %}
+                    {% include "display_friends.html" %}
+                {% endblock %}
+            </div>
+            <!-- Overlay for modal -->
+            <div id="overlay" class="overlay"></div>
+
+        </div>
+    </div>
+    <script>
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modal = document.getElementById('myModal');
+        const overlay = document.getElementById('overlay');
+        const modalContent = document.getElementById('modalContent');
+
+        openModalBtn.addEventListener('click', () => {
+            // Fetch content from /create_post and insert it into the modal
+            $.ajax({
+                url: '/create_post',
+                method: 'GET',
+                success: function (data) {
+                    console.log(data);
+                    modalContent.innerHTML = data;
+                    modal.style.display = 'block';
+                    overlay.style.display = 'block';
+                },
+                error: function () {
+                    alert('Failed to load content.');
+                }
+            });
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        // Close the modal if the overlay is clicked
+        overlay.addEventListener('click', () => {
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
+

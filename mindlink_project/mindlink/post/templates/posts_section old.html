@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'post/post_section_style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Document</title>
+</head>
+<script src="https://kit.fontawesome.com/5dc8fa1782.js" crossorigin="anonymous"></script>
+<body>
+    <!-- Content for the homepage goes here -->
+    {% if message %}
+        <!-- Display posts -->
+
+        {% for post in posts %}
+        <div class="post">
+            <div class="grid-container">
+                <img src="{% static 'images/profile_picture.png' %}" class="grid-item profile-picture" alt="profile_picture" width="40" height="40">
+                <span class="grid-item post-username"><a href="{% url 'user_profile_view' post.user.username %}" style="font-weight:bold;">{{ post.user.username }}</a></span>
+                <span class="grid-item post-creation-date">{{ post.created_at|date:"F d, Y H:i" }}</span>
+            </div>
+
+            <p>{{ post.content }}</p>
+
+            <!-- Buttons -->
+            <div class="grid-container-buttons">
+                <div class="post-likes grid-item">
+                    <!-- Likess -->
+                    {% if request.user.is_authenticated %}
+                        {% if request.user in post.likes.all %}
+                            <a href="{% url 'like_post_view' post.id %}" ><i class="fa-solid fa-heart fa-xl"></i></a>
+                        {% else %}
+                            <a href="{% url 'like_post_view' post.id %}" ><i class="fa-regular fa-heart fa-xl"></i></a>
+                        {% endif %}
+                    {% endif %}
+                    
+                    <!-- Likes Count -->
+                    <span class="likes-count">{{ post.likes.count }}</span>
+                </div>
+
+                <!-- Comments button -->
+                <div class="post-comments grid-item toggle-comments-btn" data-post-id="{{ post.id }}">
+                    <i class="fa-regular fa-comments fa-xl"></i>
+                </div>   
+
+                <div class="post-favorites grid-item favorite-btn" data-post-id="{{ post.id }}">
+                <i class="fa-regular fa-bookmark fa-xl"></i></div>
+                <!-- <div class="post-favorites grid-item favorite-btn" data-post-id="{{ post.id }}">
+                    {% if request.user in post.favorites.all %}
+                        <i class="fa-solid fa-bookmark fa-xl"></i>
+                    {% else %}
+                        <i class="fa-regular fa-bookmark fa-xl"></i>
+                    {% endif %}
+                </div>
+                         -->
+                
+
+            </div>
+
+            <!-- Display comments under the post -->
+            <div class="comments-container" style="display: none;">  
+                <h3>Comments</h3>
+                {% for comment in post.comments %}
+                    <div class="grid-container">
+                        <img src="{% static 'images/profile_picture.png' %}" class="grid-item profile-picture" alt="profile_picture" width="40" height="40">
+                        <span class="grid-item post-username" ><a href="{% url 'user_profile_view' post.user.username %}" style="font-weight:bold;">{{ comment.user.username }}</a></span>
+                        <span class="grid-item post-creation-date">{{ post.created_at }}</span>
+                    </div>
+                    <p>{{ comment.comment }}</p>
+
+                    <!-- Like Comments -->
+                    {% if request.user.is_authenticated %}
+                        {% if request.user in comment.likes.all %}
+                            <a href="{% url 'like_comment_view' comment.id %}" ><i class="fa-solid fa-heart fa-xl"></i></a>
+                        {% else %}
+                            <a href="{% url 'like_comment_view' comment.id %}" ><i class="fa-regular fa-heart fa-xl"></i></a>
+                        {% endif %}
+                        <span class="likes-count">{{ comment.likes.count }}</span>
+                        {% if request.user == comment.user or request.user == post.user %}
+                            <a href="{% url 'delete_comment_view' comment.id %}" class="btn btn-primary btn-sm">Delete</a>
+                    {% endif %}
+                {% endif %}
+
+                {% empty %}
+                    No comments yet.
+                {% endfor %}
+
+                <div class="form-group comments">
+                    <h3>Add a Comment:</h3>
+                    <!-- Comments form with hidden post_id field -->
+                    <form method="post">
+                        {% csrf_token %}
+ 
+                        <div class="grid-container-comment_form">
+                            <div class="grid-item">
+                                {{ comment_form.comment }}
+                                <input type="hidden" name="post_id" value="{{ post.id }}">                                        
+                            </div>
+                            <div class="grid-item">
+                                <button type="submit" class="btn btn-primary">Send</button>                                                                
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <script>
+        // Comments toogle button
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggleButtons = document.querySelectorAll('.toggle-comments-btn');
+
+            toggleButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var postContainer = button.closest('.post');
+
+                    var commentsContainer = postContainer.querySelector('.comments-container');
+
+                    if (commentsContainer.style.display === 'none' || commentsContainer.style.display === '') {
+                        commentsContainer.style.display = 'block';
+                        button.querySelector('i').classList.replace('fa-regular', 'fa-solid');
+                        
+                    } else {
+                        commentsContainer.style.display = 'none';
+                        button.querySelector('i').classList.replace('fa-solid','fa-regular');
+                    }
+
+                });
+            });
+        });
+
+        // Favorites
+
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     var favoriteButtons = document.querySelectorAll('.favorite-btn');
+
+        //     favoriteButtons.forEach(function (button) {
+        //         button.addEventListener('click', function () {
+        //             var post_id = button.dataset.postId;
+
+        //             // Determine whether to add or remove from favorites
+        //             var url = button.classList.contains('favorited') ? `/remove_from_favorites/${post_id}/` : `/add_to_favorites/${post_id}/`;
+
+        //             // Make an AJAX request to handle adding/removing from favorites
+        //             fetch(url)
+        //                 .then(response => response.json())
+        //                 .then(data => {
+        //                     if (data.success) {
+        //                         // Update the button text and class accordingly
+        //                         button.classList.toggle('favorited');
+
+        //                         if (button.classList.contains('favorited')) {
+        //                             button.innerHTML = '<i class="fa-solid fa-bookmark fa-xl"></i>';
+        //                         } else { 
+        //                             button.innerHTML = '<i class="fa-regular fa-bookmark fa-xl"></i>';
+        //                         }
+
+        //                         console.log(data.message);
+        //                     } else {
+        //                         console.error('Failed to update favorites:', data.message);
+        //                     }
+        //                 })
+        //                 .catch(error => console.error('Error:', error));
+        //         });
+        //     });
+        // });
+    </script>
+</body>
+</html>

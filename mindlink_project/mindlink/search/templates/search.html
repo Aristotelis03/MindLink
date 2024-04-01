@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block search_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'search/search_style.css' %}">
+
+
+{% endblock %} 
+{% block title %} Search : {{search_input}} {% endblock %}
+{% block content %}
+
+    {% if no_hashtag_found and no_posts_found and no_users_found %}
+        <p style="text-align: center;">No results found.</p>
+    {% else %}
+        <div class="search_tabs">
+            <button class="tablinks" onclick="resultsSection(event, 'posts_results')" id="defaultOpen">Posts</button>
+            <button class="tablinks" onclick="resultsSection(event, 'users_results')">Users</button>
+            <button class="tablinks" onclick="resultsSection(event, 'hashtags_results')">Hashtags</button>
+        </div>
+    {% endif %}
+
+    <div class="users_results tabcontent" id="users_results">
+         {% if no_users_found %}
+        <p style="text-align: center;">No users found.</p>
+        {% elif users_results %}
+            {% for username in users_results %} 
+            <div class="box">
+                <div class="grid-container-users">
+                    <img src="{{username.profile_image.url}}" class="grid-item profile-picture" alt="profile_picture" width="40" height="40">
+                    <span class="grid-item post-username">
+                        <a href="{% url 'user_profile_view' username %}" style="font-weight:bold;">
+                            {{ username }}
+                        </a>
+                    </span>
+                </div>
+
+            </div>
+
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+
+    <div class="hashtags_results tabcontent" id="hashtags_results">
+        {% if no_hashtag_found %}
+        <p style="text-align: center;">No hashtags found.</p>
+        {% elif hashtags_results %}
+            {% for hashtag in hashtags_results %} 
+            <div class="box">            
+                <a href="{% url 'hashtag_posts' hashtag.name %} ">#{{ hashtag }}</a>
+
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="posts_results tabcontent" id="posts_results">
+        {% if no_posts_found %}
+            <p style="text-align: center;">No posts found.</p>
+            {% elif posts %}
+                <div class="post_section">
+                    {% include "posts_section.html" %}
+                </div>
+        {% endif %}
+
+    </div>
+
+    <script>
+        function resultsSection(evt, section) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+        
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            }
+        
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+        
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(section).style.display = "block";
+            evt.currentTarget.className += " active";
+
+        }
+        document.getElementById("defaultOpen").click();
+      </script>
+{% endblock %}       

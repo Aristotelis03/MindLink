@@ -1,0 +1,64 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'post/create_post_style.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<form method="post" action="{% url 'create_post_view' %}" id="create-post-form" enctype="multipart/form-data">
+    <div class="form-groop">
+        {% csrf_token %}
+
+        <!-- {{ form.content }} -->
+        <div class="content-textarea">
+            <textarea name="{{ form.content.name }}" id="{{form.content.id_for_label}}" placeholder="Share your thoughts" class="md-textarea form-control auto-expand" rows="3" cols="50"></textarea>
+        </div>
+        <div class="grid-container">
+            <div class="pictures">
+                <label for="{{ form.picture.id_for_label }}" class="upload-file form-control">
+                    <input type="file" name="{{ form.picture.name }}" id="{{ form.picture.id_for_label }}" class="custom-file-input" style="display:none;" />
+                    <i class="fa-solid fa-image fa-lg" ></i>    
+                </label>
+            </div>
+            <div class="video">
+                <label for="{{ form.video.id_for_label }}" class="upload-file form-control">
+                    <input type="file" name="{{ form.video.name }}" id="{{ form.video.id_for_label }}" class="custom-file-input" style="display:none;" />
+                    <i class="fa-solid fa-video fa-lg" ></i>                  
+             
+                </label>
+            </div>
+        </div>
+  
+        <div class="grid-btn">
+            <button class="btn btn-primary create-post-btn" type="submit">Create Post</button>
+        </div>
+
+    </div>
+
+</form>
+<script>
+    document.addEventListener('input', function (e) {
+        if (e.target.classList.contains('auto-expand')) {
+            autoExpand(e.target);
+        }
+    });
+    
+    function autoExpand(textarea) {
+        textarea.classList.add('md-textarea');  // Add the md-textarea class
+        textarea.style.height = 'auto';
+    textarea.style.height = (textarea.scrollHeight + textarea.offsetHeight - textarea.clientHeight) + 'px';
+    }
+    </script>
+<script>
+// window.pressed = function(){
+//     var a = document.getElementById('aa');
+//     if(a.value == "")
+//     {
+//         fileLabel.innerHTML = "Choose file";
+//     }
+//     else
+//     {
+//         var theSplit = a.value.split('\\');
+//         fileLabel.innerHTML = theSplit[theSplit.length-1];
+//     }
+// };
+</script> 
+

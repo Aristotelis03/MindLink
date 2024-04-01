@@ -1,0 +1,23 @@
+{% load static %}
+{% block display_friends_style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'homepage/display_friends_style.css' %}">
+<!-- Include additional CSS files specific to the sidebar here if needed -->
+{% endblock %}
+<div class="container">
+{% block content_display_friends %}
+
+        <p>Friends</p>
+        <hr>
+
+        {% for user in followers_back %}
+        <div class="grid-container-friends">
+            <img src="{{user.profile_image.url}}" class="grid-item profile-picture" alt="profile_picture" width="40" height="40">
+            <span class="grid-item post-username"><a href="{% url 'user_profile_view' user.username %}" style="font-weight:bold;">{{ user.username }}</a></span>
+        </div>
+
+        {% endfor %}
+        
+
+
+{% endblock %}
+</div>

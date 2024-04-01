@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'post/post_section_style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Document</title>
+</head>
+<script src="https://kit.fontawesome.com/5dc8fa1782.js" crossorigin="anonymous"></script>
+<body>
+    <!-- Content for the homepage goes here -->
+
+    <!-- Display posts -->
+    <div class="post-section">
+        {% include "display_posts.html" %}
+    </div>
+
+
+        
+</body>
+</html>

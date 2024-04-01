@@ -1,0 +1,344 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'post/post_section_style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Document</title>
+</head>
+<script src="https://kit.fontawesome.com/5dc8fa1782.js" crossorigin="anonymous"></script>
+<body>
+    <!-- Content for the homepage goes here -->
+
+        <!-- Display posts -->
+    {% for post in posts %}
+        <div class="post">
+            <div class="options_container">
+                <a class="options_btn" onclick="postOptions({{post.id}})">
+                    <i class="fa-solid fa-bars fa-lg"></i>
+                </a>
+      
+            
+                <div id="post-options-{{ post.id }}" class="options" style="display: none;">
+                    {% if request.user == post.user or request.user.id == 1  %}
+                        <a href="{% url 'delete_post' post.id %}" class="li">Delete</a>
+
+                    {% endif %}
+                    
+                    <a href=# class="li">Report</a>
+                    
+                    {% if request.user == post.user %}
+                        <a href=# class="li">Archive</a>
+                    {% endif %}
+
+                </div>
+            </div>
+            <div class="grid-container">
+                <img src="{{post.user.profile_image.url}}" class="grid-item profile-picture" alt="profile_picture" width="40" height="40">
+                <span class="grid-item post-username"><a href="{% url 'user_profile_view' post.user.username %}" style="font-weight:bold;">{{ post.user.username }}</a></span>
+                <span class="grid-item post-creation-date">{{ post.created_at|date:"F d, Y H:i" }}</span>
+
+            </div>
+
+            <p>{{ post.content }}</p>
+
+
+            {% if post.picture %}
+            <div class="post-image">
+                <img src="{{ post.picture.url }}" alt="Image">
+            </div>
+            
+            {% endif %}
+
+            {% if post.picture %}
+                <p>{{ post.video }}</p>
+            {% endif %}
+            <hr>
+            <!-- Buttons -->
+            <div class="grid-container-buttons">
+
+                <div class="post-likes grid-item">
+                    {% if request.user.is_authenticated %}
+                        <span class="like-toggle" data-post-id="{{ post.id }}" data-likes-count="{{ post.likes.count }}">
+                            {% if request.user in post.likes.all %}
+                                <i class="fa-solid fa-heart fa-xl"></i>
+                            {% else %}
+                                <i class="fa-regular fa-heart fa-xl"></i>
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                    <!-- Likes Count -->
+                    <span class="likes-count">{{ post.likes.count }}</span>
+                </div>
+
+                <!-- Comments button -->
+                <div class="post-comments grid-item toggle-comments-btn" data-post-id="{{ post.id }}">
+                    <i class="fa-regular fa-comments fa-xl"></i>
+                </div>   
+
+                <div class="post-favorites grid-item favorite-btn">
+                    {% if request.user.is_authenticated %}
+                        <span class="favorites-toggle" data-post-id="{{ post.id }}">
+                            {% if request.user in post.favorited_by.all %}
+                                <i class="fa-solid fa-bookmark fa-xl"></i>
+                            {% else %}
+                                <i class="fa-regular fa-bookmark fa-xl"></i>
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                </div>
+                <!-- {{ request.user }}
+                {{ post.favorited_by.all }} -->
+            </div>
+            <div class="comments-container"  style="display: none;">  
+                <!-- <div id="comments-section-{{ post.id }}" class="display-comments"> -->
+                    {% include 'display_comments.html' with comments=post.comments %}
+
+                <!-- </div> -->
+                {% include 'create_comments.html' with post=post comment_form=comment_form %}
+            </div>
+            
+
+        </div>
+
+    {% endfor %}
+
+
+    <script>
+             function deleteComment(commentId,postId) {
+                        // Confirm the deletion (you can customize this part)
+                            // Send an AJAX request to delete_comment_view
+                        $.ajax({
+                            type: 'POST',  // Change this line to use POST
+                            url: `/delete_comment/${commentId}/`,
+                            data: {
+                                'comment_id': commentId,
+                                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                            },
+                            success: function () {
+                                // Update the UI to reflect the comment deletion
+                                $(`div[data-comment-id=${commentId}]`).remove();
+                                $.ajax({
+                                    type: 'GET',
+                                    url: `/get_comments/${postId}/`,  // Replace with your endpoint to fetch comments
+                                    success: function (data) {
+                                        // Update the UI with the new comments
+                                        console.log(data);
+                                        $('#comments-section-' + postId).html(data);
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error(xhr.responseText);
+                                    }
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                console.error(xhr.responseText);
+                            }
+                        });
+                    
+                    }
+            function likeComment(commentId, postId) {
+                fetch('/like_comment/' + commentId + '/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({}),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var likeButton = document.querySelector(`.like-comments-toggle[data-comment-id="${commentId}"]`);
+                    var likesCountSpan = likeButton.nextElementSibling;
+
+                    likeButton.innerHTML = data.message === "Like added." ?
+                        '<i class="fa-solid fa-heart fa-xl"></i>' :
+                        '<i class="fa-regular fa-heart fa-xl"></i>';
+
+                    likesCountSpan.innerText = data.likes_count;
+                })
+                .catch(error => console.error('Error:', error));
+            }
+                    
+        // Ajax for comment form
+        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('submit', function (event) {
+            if (event.target && event.target.classList.contains('comment-form')) {
+                event.preventDefault();
+                var currentForm = event.target;
+
+                $.ajax({
+                    url: currentForm.action,
+                    type: currentForm.method,
+                    data: $(currentForm).serialize(),
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            // Optionally, you can hide the form or show a success message
+                            // $('#alert').html('<div class="alert alert-success">Thank you for your message!</div>').show();
+
+                            // Fetch the updated comments after adding a new comment
+                            var postId = currentForm.querySelector('#submit_comment').dataset.postIdCommentsForm;
+                            fetchComments(postId);
+                        } else {
+                            $('#alert').html('<div class="alert alert-danger">Try again!</div>').show();
+                        }
+                    }
+                });
+            }
+        });
+
+        // Function to fetch comments
+        function fetchComments(postId) {
+            $.ajax({
+                type: 'GET',
+                url: `/get_comments/${postId}/`,  // Replace with your endpoint to fetch comments
+                success: function (data) {
+                    // Update the UI with the new comments
+                    console.log(data);
+                    $('#comments-section-' + postId).html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    });
+        // Ajax Likes
+        document.addEventListener('DOMContentLoaded', function () {
+            var likeButtons = document.querySelectorAll('.like-toggle');
+
+            likeButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var postID = button.dataset.postId;
+
+                    if (!postID) {
+                        console.error('Invalid post ID');
+                        return;
+                    }
+
+                    fetch('/like_post/' + postID + '/', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({}),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        button.innerHTML = data.message === "Like added." ?
+                            '<i class="fa-solid fa-heart fa-xl"></i>' :
+                            '<i class="fa-regular fa-heart fa-xl"></i>';
+
+                        button.nextElementSibling.innerText = data.likes_count;
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            });
+        });
+// Ajax Favorites
+        document.addEventListener('DOMContentLoaded', function () {
+            var favoritesButtons = document.querySelectorAll('.favorites-toggle');
+
+            favoritesButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var postID = button.dataset.postId;
+
+                    if (!postID) {
+                        console.error('Invalid post ID');
+                        return;
+                    }
+
+                    fetch('/toggle_favorite/' + postID + '/', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({}),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        button.innerHTML = data.message === "Added To Favorites." ?
+                            '<i class="fa-solid fa-bookmark fa-xl""></i>' :
+                            '<i class="fa-regular fa-bookmark fa-xl""></i>';
+                            
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            });
+        });
+        // Comments toogle button
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggleButtons = document.querySelectorAll('.toggle-comments-btn');
+
+            toggleButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var postContainer = button.closest('.post');
+
+                    var commentsContainer = postContainer.querySelector('.comments-container');
+
+                    if (commentsContainer.style.display === 'none' || commentsContainer.style.display === '') {
+                        commentsContainer.style.display = 'block';
+                        button.querySelector('i').classList.replace('fa-regular', 'fa-solid');
+                        
+                    } else {
+                        commentsContainer.style.display = 'none';
+                        button.querySelector('i').classList.replace('fa-solid','fa-regular');
+                    }
+
+                });
+            });
+        });
+        function postOptions(postId) {
+            var x = document.getElementById("post-options-" + postId);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+        // Ajax Comments Likes
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     var likeButtons = document.querySelectorAll('.like-comments-toggle');
+
+        //     likeButtons.forEach(function (button) {
+        //         button.addEventListener('click', function () {
+        //             var postID = button.dataset.postId;
+        //             var commentID = button.dataset.commentId;
+        //             if (!commentID) {
+        //                 console.error('Invalid post ID');
+        //                 return;
+        //             }
+
+        //             fetch('/like_comment/' + commentID + '/', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'X-CSRFToken': '{{ csrf_token }}',
+        //                     'Content-Type': 'application/json',
+        //                 },
+        //                 credentials: 'same-origin',
+        //                 body: JSON.stringify({}),
+        //             })
+        //             .then(response => response.json())
+        //             .then(data => {
+        //                 button.innerHTML = data.message === "Like added." ?
+        //                     '<i class="fa-solid fa-heart fa-xl"></i>' :
+        //                     '<i class="fa-regular fa-heart fa-xl"></i>';
+
+        //                 button.nextElementSibling.innerText = data.likes_count;
+        //             })
+        //             .catch(error => console.error('Error:', error));
+        //         });
+        //     });
+        // });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{% extends "base_auth.html"%}
+
+{% block title %} Sign up {% endblock %}
+{% block page%}
+    <div class="container">
+        <!-- Center the form horizontally -->
+        <div class="row justify-content-center">
+            <!-- <div class="col-md-6"> -->
+                <h1>Sign up</h1>
+
+                {% if error_message %}
+                <div>
+                    <p style="color: red;">{{ error_message }}</p>
+                </div>
+                {% endif %}
+<!-- 
+                <form method="post">
+                    <div class="form-group">
+                        <input class="form-control" type="text" autocomplete="off" autofocus id="username" name="username" placeholder="Set a username">
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="email" autocomplete="off" autofocus id="email" name="email" placeholder="Set an email">
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="password" id="password" name="password" placeholder="Set a password">
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="password" id="confirmation" name="confirmation" placeholder="Repeat assword">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Register</button> 
+                </form> -->
+                <form method="post" action="{% url 'register' %}">                
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+             
+                        {{ field }}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                            <span style="color: rgb(241, 47, 47);" class="error">{{ error|striptags }}</span><br>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Register</button> 
+                </form>
+
+                <div class="links">
+                    <p><a href="/login">Log in</a></p>
+                </div>
+            <!-- </div> -->
+        </div>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,44 @@
+button {
+    border: 1px solid white !important;
+    background-color: black !important;
+    border-radius: 10px;
+    text-align: center;
+    padding: 5%;
+}
+ 
+button:hover {
+    box-shadow: 0 0 5px 2px #04d9ff;
+    border: 1px solid black !important;
+}
+
+button:focus {
+    box-shadow: 0 0 5px 2px #04d9ff;
+    border: 1px solid black !important;
+    outline: none !important;
+}
+
+
+.comments {
+    margin-top: 5%;
+}
+
+textarea {
+    height: 60px !important;
+    
+}
+textarea:hover {
+    border: none !important;
+    box-shadow: 0 0 5px 2px #04d9ff !important;
+    
+}
+
+textarea:focus {
+    border: none !important;
+    box-shadow: 0 0 5px 2px #04d9ff !important;
+    
+}
+#autoresizing {
+            display: block !important;
+            overflow: hidden !important;
+            resize: none !important;
+        }

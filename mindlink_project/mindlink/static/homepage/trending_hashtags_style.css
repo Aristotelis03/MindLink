@@ -1,0 +1,11 @@
+.container {
+    padding: 30px;
+    background-color: #191919 !important;
+    border-radius: 15px;
+    color: #fff;
+    /* put it in an other div */
+    max-width: 100%; 
+    text-align: center;
+    height: min-content;
+    
+}

@@ -1,0 +1,46 @@
+.item1 { grid-area: picture; }
+.item2 { grid-area: username; }
+.item3 { grid-area: following; }
+.item4 { grid-area: followers; }
+.item5 { grid-area: following_count; }
+.item6 { grid-area: followers_count; }
+.item7 { grid-area: follow_btn; }
+
+.user-profile {
+    margin-bottom: 20px;
+}
+
+.grid-container-follow {
+    display: grid;
+    grid-template-areas: 
+    'picture picture . username username .'
+    'picture picture following following followers followers'
+    'picture picture following_count following_count followers_count followers_count'
+    'picture picture . follow_btn follow_btn .';
+    font-size: 13px;
+    text-align: center;
+    align-items:center;/* Center vertically */
+    justify-content:space-between; /* Center horizontally */
+}
+
+.item7 a{
+    color: white;
+}
+
+.item7 {
+    border: 1px solid white !important;
+    border-radius: 10px;
+    text-align: center;
+    padding: 5%;
+}
+ 
+.item7:hover {
+    box-shadow: 0 0 5px 2px #04d9ff;
+    border: 1px solid black !important;
+}
+
+.item7:focus {
+    box-shadow: 0 0 5px 2px #04d9ff;
+    border: 1px solid black !important;
+    outline: none !important;
+}

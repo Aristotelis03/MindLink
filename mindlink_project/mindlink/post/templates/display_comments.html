@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'post/post_section_style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Document</title>
+</head>
+<!-- <script src="https://kit.fontawesome.com/5dc8fa1782.js" crossorigin="anonymous"></script> -->
+<body>
+
+           <!-- Display comments under the post -->
+           <div id="comments-section-{{ post.id }}">
+                <h3>Comments</h3>
+                {% for comment in post.comments %}
+                    <div class="grid-container">
+                        <img src="{{comment.user.profile_image.url}}" class="grid-item profile-picture" alt="profile_picture" width="40" height="40">
+                        <span class="grid-item post-username" ><a href="{% url 'user_profile_view' post.user.username %}" style="font-weight:bold;">{{ comment.user.username }}</a></span>
+                        <span class="grid-item post-creation-date">{{ post.created_at }}</span>
+                    </div>
+                    <p>{{ comment.comment }}</p>
+
+                    <!-- Like Comments -->
+
+                    {% if request.user.is_authenticated %}
+                        <div class="post-likes grid-item">
+                            {% if request.user.is_authenticated %}
+                                <span onclick="likeComment({{ comment.id }}, {{post.id}})" class="like-comments-toggle" data-comment-id="{{ comment.id }}" data-likes-comment-count="{{ comment.likes.count }}">
+                                    {% if request.user in comment.likes.all %}
+                                        <i class="fa-solid fa-heart fa-xl"></i>
+                                    {% else %}
+                                        <i class="fa-regular fa-heart fa-xl"></i>
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                            <!-- Likes Count -->
+                            <span class="likes-count">{{ comment.likes.count }}</span>
+                        </div>
+
+                        {% if request.user == comment.user or request.user == post.user %}
+                            <a href="#" onclick="deleteComment({{ comment.id }}, {{post.id}})" class="btn btn-primary btn-sm">Delete</a>
+
+                    {% endif %}
+                {% endif %}
+
+                {% empty %}
+                    No comments yet.
+                {% endfor %}
+
+           </div>
+
+            
+                <script>
+                    
+                    // function deleteComment(commentId,postId) {
+                    //     // Confirm the deletion (you can customize this part)
+                    //         // Send an AJAX request to delete_comment_view
+                    //     $.ajax({
+                    //         type: 'GET',
+                    //         url: `/delete_comment/${commentId}/`,
+                    //         data: {
+
+                    //         },
+                    //         success: function () {
+                    //             // Update the UI to reflect the comment deletion
+                    //             $(`div[data-comment-id=${commentId}]`).remove();
+                    //             $.ajax({
+                    //                 type: 'GET',
+                    //                 url: `/get_comments/${postId}/`,  // Replace with your endpoint to fetch comments
+                    //                 success: function (data) {
+                    //                     // Update the UI with the new comments
+                    //                     $('#comments-section').html(data);
+                    //                 },
+                    //                 error: function (xhr, status, error) {
+                    //                     console.error(xhr.responseText);
+                    //                 }
+                    //             });
+                    //         },
+                    //         error: function (xhr, status, error) {
+                    //             console.error(xhr.responseText);
+                    //         }
+                    //     });
+                    
+                    // }
+                </script>
+
+</body>
+
+</html>

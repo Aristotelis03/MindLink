@@ -1,0 +1,35 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'post/create_comment_style.css' %}">
+
+<div class="form-group comments">
+    <!-- Comments form with hidden post_id field -->
+    <form method="post"  class="comment-form" id="comment_form" action="{% url 'create_comments' %}">
+        {% csrf_token %}
+
+        <div class="grid-container-comment_form">
+            <div class="grid-item">
+                {% csrf_token %}
+                {% for field in comment_form %}
+                    <div class="form-group">
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <input type="hidden" name="post_id" value="{{ post.id }}">                                        
+            </div>
+            <div class="grid-item">
+                <button type="submit" class="btn btn-primary" id="submit_comment" data-post-id-comments-form="{{ post.id }}">Send</button>                                                                
+            </div>
+        </div>
+
+    </form>
+
+
+<!-- delete this later -->
+    <div id="alert" style="display:none;"></div>
+</div>
+<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> -->
+<script>
+
+
+</script>

@@ -1,0 +1,143 @@
+.post {
+    padding: 30px;
+    border-radius: 15px;
+    background-color: #191919 !important; 
+    margin-bottom: 20px;
+    
+}
+
+.grid-container{
+    display: grid;
+    grid-template-columns: max-content auto auto auto;
+    grid-column-gap: 10px;
+    font-size: 13px;
+}
+
+.profile-picture {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.post-username {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 0%;
+}
+
+.post-creation-date {
+    color: #8a8a8a !important;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 0%;
+    text-align: right;
+    
+}
+
+.grid-container-buttons{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 10px;
+    font-size: 13px;
+    
+}
+
+.post-image {
+    padding: 0;
+    
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5%;
+  }
+
+/* .post-image img {
+    width: 700px;
+
+}
+   */
+
+.grid-container-comments {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 10px;
+    font-size: 13px;
+}
+.post-likes {
+    text-align: center; 
+    
+}
+
+.post-comments {
+    text-align: center; 
+    
+}
+
+.post-comments:hover {
+    color: #04d9ff;
+
+}
+
+.post-favorites {
+    text-align: center; 
+    
+}
+
+.post-likes:hover {
+    color: #04d9ff;
+
+}
+.post-favorites:hover {
+    color: #04d9ff;
+
+}
+
+
+.input {
+    background-color: black !important;
+}
+
+.toggle-comments-btn {
+    background-color: transparent !important;
+}
+
+.grid-container-comment_form {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 10px;
+    font-size: 13px;
+}
+
+textarea {
+    resize: none;
+    background: black !important;
+    height: 30px !important;
+    color: white !important;
+}
+
+.options_container {
+    display: flex;
+    justify-content: flex-end; /* Align children to the end (right) */
+    position: relative; /* Ensure relative positioning for absolute positioning of .options */
+}
+
+.options {
+    padding-left: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    position: absolute;
+    z-index: 1;
+    background-color:#19191900;
+    backdrop-filter: blur(2px);
+    margin-right: 20px;
+}
+
+.options a{
+    display: block;
+    margin-bottom: 10px;
+}
+
+
+
+

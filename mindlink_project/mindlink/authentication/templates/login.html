@@ -1,0 +1,41 @@
+{% extends "base_auth.html" %}
+{% block title %} Log in {% endblock %}
+
+{% block page %}
+    <div class="container mt-5">
+            <!-- Center the form horizontally -->
+        <div class="row justify-content-center">
+            <!-- <div class="col-md-10"> -->
+                
+                <h1>Log in</h1>
+                {% if error_message %}
+                <div>
+                    <p style="color: red;">{{ error_message }}</p>
+                </div>
+
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}  {# Include CSRF token for security #}
+                    <div class="form-group">
+                        <input class="form-control" type="text" autocomplete="off" autofocus id="username" name="username" placeholder="Username">
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="password" id="password" name="password" placeholder="Password">
+                        <div class="links">
+                            <a class="recover" href="/recover">Forgot your password?</a>
+                        </div>
+                    </div>
+
+                        <button type="submit" class="btn btn-primary">Log In</button>
+                </form>
+                <div class="links">
+                    <a href="/register">Sign up</a><br>
+
+                </div>
+
+            <!-- </div> -->
+        </div>
+    </div>
+{% endblock %}

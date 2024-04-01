@@ -1,0 +1,18 @@
+{% load static %}
+{% block trending_hashtags_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'homepage/trending_hashtags_style.css' %}">
+<!-- Include additional CSS files specific to the sidebar here if needed -->
+{% endblock %}
+<div class="container">
+{% block trending_hashtags %}
+
+        <p>Trending</p>
+        <hr>
+        {% for hashtag in trending_hashtags %}
+            <p><a href="{% url 'hashtag_posts' hashtag.name %} ">#{{ hashtag.name }}</a></p>
+                
+        {% endfor %}
+        
+
+{% endblock %}
+</div>
